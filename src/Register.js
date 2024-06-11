@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Register.css';
 
 const Register = () => {
@@ -18,10 +19,24 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Backend connection here
-    console.log(formData);
+    try {
+      const response = await fetch('http://localhost:3001/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert('Usuário registrado com sucesso!');
+      } else {
+        alert(`Erro ao registrar usuário: ${data.error}`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Erro ao registrar usuário');
+    }
   };
 
   return (
@@ -92,6 +107,11 @@ const Register = () => {
           </div>
           <button type="submit">Cadastrar</button>
         </form>
+        <div className="register-links">
+          <p>
+            Já tem uma conta? <Link to="/login">Faça login</Link>
+          </p>
+        </div>
       </div>
     </div>
   );
