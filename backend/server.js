@@ -70,6 +70,32 @@ app.post('/login', async (req, res) => {
   }
 });
 
+// Endpoint para criar um contato
+app.post('/contacts', async (req, res) => {
+  const { name, birthdate, phone, favorite } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO contacts (name, birthdate, phone, favorite) VALUES ($1, $2, $3, $4) RETURNING *',
+      [name, birthdate, phone, favorite]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao criar contato' });
+  }
+});
+
+// Endpoint para buscar todos os contatos
+app.get('/contacts', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM contacts');
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao buscar contatos' });
+  }
+});
+
 // Iniciar o servidor
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);

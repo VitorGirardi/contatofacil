@@ -31,7 +31,7 @@ const Register = () => {
       if (response.ok) {
         alert('Usuário registrado com sucesso!');
       } else {
-        alert(`Erro ao registrar usuário: ${data.error}`);
+        alert(`Erro ao registrar usuário: ${data.error}\nDetalhes: ${data.details}`);
       }
     } catch (err) {
       console.error(err);
@@ -53,6 +53,7 @@ const Register = () => {
               name="username" 
               value={formData.username} 
               onChange={handleChange} 
+              required
             />
           </div>
           <div className="form-group">
@@ -63,6 +64,7 @@ const Register = () => {
               name="name" 
               value={formData.name} 
               onChange={handleChange} 
+              required
             />
           </div>
           <div className="form-group">
@@ -73,6 +75,7 @@ const Register = () => {
               name="email" 
               value={formData.email} 
               onChange={handleChange} 
+              required
             />
           </div>
           <div className="form-group">
@@ -103,6 +106,7 @@ const Register = () => {
               name="password" 
               value={formData.password} 
               onChange={handleChange} 
+              required
             />
           </div>
           <button type="submit">Cadastrar</button>
