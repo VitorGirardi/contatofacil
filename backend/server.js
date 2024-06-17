@@ -84,6 +84,55 @@ app.post('/contacts', async (req, res) => {
     res.status(500).json({ error: 'Erro ao criar contato' });
   }
 });
+app.put('/contacts/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, birthdate, phone, favorite } = req.body;
+
+  try {
+    const result = await pool.query(
+      'UPDATE contacts SET name = $1, birthdate = $2, phone = $3, favorite = $4 WHERE id = $5 RETURNING *',
+      [name, birthdate, phone, favorite, id]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Contato não encontrado' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao atualizar contato' });
+  }
+});
+
+// Rota para buscar todos os contatos de um usuário
+app.get('/contacts', async (req, res) => {
+  const { user_id } = req.query;
+  try {
+    const result = await pool.query('SELECT * FROM contacts WHERE user_id = $1', [user_id]);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error('Erro ao buscar contatos:', err);
+    res.status(500).json({ error: 'Erro ao buscar contatos' });
+  }
+});
+
+// Rota para atualizar um contato
+app.put('/contacts/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, birthdate, phone, favorite } = req.body;
+  try {
+    const result = await pool.query(
+      'UPDATE contacts SET name = $1, birthdate = $2, phone = $3, favorite = $4 WHERE id = $5 RETURNING *',
+      [name, birthdate, phone, favorite, id]
+    );
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    console.error('Erro ao atualizar contato:', err);
+    res.status(500).json({ error: 'Erro ao atualizar contato' });
+  }
+});
+
 
 // Endpoint para buscar todos os contatos
 app.get('/contacts', async (req, res) => {
@@ -100,3 +149,4 @@ app.get('/contacts', async (req, res) => {
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });
+

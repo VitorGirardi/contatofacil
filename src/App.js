@@ -1,27 +1,27 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './AuthContext';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login';
 import Register from './Register';
 import Dashboard from './Dashboard';
-import RecoverPassword from './RecoverPassword';
 import AddContact from './AddContact';
+import EditContact from './EditContact';
+import './App.css';
 
-const App = () => {
+function App() {
   return (
     <Router>
-      <AuthProvider>
+      <div className="App">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/recover" element={<RecoverPassword />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-contact" element={<AddContact />} />
-          <Route path="/" element={<Login />} /> {/* Redirect to login by default */}
+          <Route path="/edit-contact/:id" element={<EditContact />} />
+          <Route path="/" element={<Login />} />
         </Routes>
-      </AuthProvider>
+      </div>
     </Router>
   );
-};
+}
 
 export default App;

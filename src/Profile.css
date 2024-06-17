@@ -1,0 +1,25 @@
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .profile-box {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .loading {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .error {
+    font-size: 24px;
+    font-weight: bold;
+    color: red;
+  }
+  

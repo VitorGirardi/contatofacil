@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const { login } = useAuth();
+  const [login, setLogin] = useState('');
+  const [senha, setSenha] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
       const response = await fetch('http://localhost:3001/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ login, password: senha })
       });
       const data = await response.json();
       if (response.ok) {
-        login(data.token); // Supondo que o token seja retornado no campo 'token'
+        localStorage.setItem('userId', data.id);  // Armazenar o ID do usuário no localStorage
+        alert('Login realizado com sucesso!');
+        navigate('/dashboard');
       } else {
         alert(`Erro ao fazer login: ${data.error}`);
       }
@@ -34,14 +35,14 @@ const Login = () => {
         <input 
           type="text" 
           placeholder="Login" 
-          value={username} 
-          onChange={(e) => setUsername(e.target.value)}
+          value={login} 
+          onChange={(e) => setLogin(e.target.value)}
         />
         <input 
           type="password" 
           placeholder="Senha" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)}
+          value={senha} 
+          onChange={(e) => setSenha(e.target.value)}
         />
         <button onClick={handleLogin}>Entrar</button>
         <div className="login-links">
