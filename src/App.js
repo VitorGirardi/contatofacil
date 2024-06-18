@@ -1,25 +1,26 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './Login';
-import Register from './Register';
 import Dashboard from './Dashboard';
 import AddContact from './AddContact';
 import EditContact from './EditContact';
-import './App.css';
+import Profile from './Profile';
+import Login from './Login';
+import Register from './Register';
+import RecoverPassword from './RecoverPassword';
 
 function App() {
   return (
     <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/add-contact" element={<AddContact />} />
-          <Route path="/edit-contact/:id" element={<EditContact />} />
-          <Route path="/" element={<Login />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/add-contact" element={<AddContact />} />
+        <Route path="/edit-contact/:id" element={<EditContact />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/recover" element={<RecoverPassword />} />
+        <Route path="/" element={<Login />} />
+      </Routes>
     </Router>
   );
 }

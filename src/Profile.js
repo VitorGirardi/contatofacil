@@ -3,52 +3,41 @@ import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 
 const Profile = () => {
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const userId = localStorage.getItem('userId'); // Certifique-se de que o ID do usuário está sendo armazenado no localStorage corretamente
-      if (!userId) {
-        navigate('/login');
-        return;
-      }
-
+      const userId = localStorage.getItem('userId');
       try {
-        const response = await fetch(`http://localhost:3001/user/${userId}`);
-        if (!response.ok) {
-          throw new Error(`Erro ao carregar perfil: ${response.statusText}`);
-        }
+        const response = await fetch(`http://localhost:3001/users/${userId}`);
         const data = await response.json();
-        setUserData(data);
+        if (response.ok) {
+          setUser(data);
+        } else {
+          console.error('Erro ao buscar dados do usuário:', data.error);
+        }
       } catch (err) {
-        console.error(err);
-        alert('Erro ao carregar perfil');
-      } finally {
-        setLoading(false);
+        console.error('Erro ao buscar dados do usuário:', err);
       }
     };
-    fetchUserData();
-  }, [navigate]);
 
-  if (loading) {
-    return <div className="loading">Carregando...</div>;
-  }
+    fetchUserData();
+  }, []);
 
   return (
     <div className="profile-container">
-      {userData ? (
-        <div className="profile-box">
+      {user ? (
+        <>
           <h1>Perfil</h1>
-          <p><strong>Usuário:</strong> {userData.username}</p>
-          <p><strong>Nome:</strong> {userData.name}</p>
-          <p><strong>Email:</strong> {userData.email}</p>
-          <p><strong>Telefone:</strong> {userData.phone}</p>
-          <p><strong>Data de Nascimento:</strong> {new Date(userData.birthdate).toLocaleDateString()}</p>
-        </div>
+          <p>Nome: {user.name}</p>
+          <p>Email: {user.email}</p>
+          <p>Telefone: {user.phone}</p>
+          <p>Data de Nascimento: {user.birthdate}</p>
+          <button onClick={() => navigate('/dashboard')}>Voltar ao Dashboard</button>
+        </>
       ) : (
-        <div className="error">Usuário nao encontrado</div>
+        <p>Carregando...</p>
       )}
     </div>
   );

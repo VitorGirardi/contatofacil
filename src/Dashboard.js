@@ -1,3 +1,4 @@
+// Dashboard.js
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Dashboard.css';
@@ -30,33 +31,33 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
+    <div className="dash-container">
+      <header className="dash-header">
         <h1>CONTATO FACIL</h1>
         <button onClick={() => {
           localStorage.removeItem('userId');
           navigate('/login');
-        }} className="logout-button">Sair</button>
+        }} className="dash-logout-button">Sair</button>
       </header>
-      <div className="dashboard-content">
-        <nav className="dashboard-nav">
+      <div className="dash-content">
+        <nav className="dash-nav">
           <ul>
             <li><Link to="/profile">Perfil</Link></li>
             <li><Link to="/contacts">Contatos</Link></li>
             <li><Link to="/settings">Configurações</Link></li>
           </ul>
         </nav>
-        <div className="dashboard-main">
-          <input type="text" placeholder="Buscar..." className="search-bar" />
-          <ul className="contact-list">
+        <div className="dash-main">
+          <input type="text" placeholder="Buscar..." className="dash-search-bar" />
+          <ul className="dash-contact-list">
             {contacts.map(contact => (
-              <li key={contact.id} className="contact-item">
-                {contact.name} - {contact.phone}
+              <li key={contact.id} className="dash-contact-item">
+                {contact.name} - {contact.phone} {contact.favorite && <span>★</span>}
                 <button onClick={() => handleEdit(contact)}>Editar</button>
               </li>
             ))}
           </ul>
-          <button onClick={() => navigate('/add-contact')} className="add-contact-button">+</button>
+          <button onClick={() => navigate('/add-contact')} className="dash-add-contact-button">+</button>
         </div>
       </div>
     </div>

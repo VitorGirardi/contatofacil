@@ -72,36 +72,16 @@ app.post('/login', async (req, res) => {
 
 // Endpoint para criar um contato
 app.post('/contacts', async (req, res) => {
-  const { name, birthdate, phone, favorite } = req.body;
+  const { name, birthdate, phone, favorite, user_id } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO contacts (name, birthdate, phone, favorite) VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, birthdate, phone, favorite]
+      'INSERT INTO contacts (name, birthdate, phone, favorite, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [name, birthdate, phone, favorite, user_id]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Erro ao criar contato' });
-  }
-});
-app.put('/contacts/:id', async (req, res) => {
-  const { id } = req.params;
-  const { name, birthdate, phone, favorite } = req.body;
-
-  try {
-    const result = await pool.query(
-      'UPDATE contacts SET name = $1, birthdate = $2, phone = $3, favorite = $4 WHERE id = $5 RETURNING *',
-      [name, birthdate, phone, favorite, id]
-    );
-    
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Contato não encontrado' });
-    }
-
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Erro ao atualizar contato' });
   }
 });
 
@@ -126,22 +106,29 @@ app.put('/contacts/:id', async (req, res) => {
       'UPDATE contacts SET name = $1, birthdate = $2, phone = $3, favorite = $4 WHERE id = $5 RETURNING *',
       [name, birthdate, phone, favorite, id]
     );
-    res.status(200).json(result.rows[0]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Contato não encontrado' });
+    }
+    res.json(result.rows[0]);
   } catch (err) {
     console.error('Erro ao atualizar contato:', err);
     res.status(500).json({ error: 'Erro ao atualizar contato' });
   }
 });
 
-
-// Endpoint para buscar todos os contatos
-app.get('/contacts', async (req, res) => {
+// Endpoint para buscar um usuário pelo ID
+app.get('/users/:id', async (req, res) => {
+  const { id } = req.params;
   try {
-    const result = await pool.query('SELECT * FROM contacts');
-    res.json(result.rows);
+    const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+    if (result.rows.length > 0) {
+      res.status(200).json(result.rows[0]);
+    } else {
+      res.status(404).json({ error: 'Usuário não encontrado' });
+    }
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Erro ao buscar contatos' });
+    console.error('Erro ao buscar usuário:', err);
+    res.status(500).json({ error: 'Erro ao buscar usuário' });
   }
 });
 
@@ -149,4 +136,3 @@ app.get('/contacts', async (req, res) => {
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });
-
