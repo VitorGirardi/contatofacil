@@ -1,4 +1,3 @@
-// AddContact.js
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './AddContact.css';
@@ -12,7 +11,8 @@ const AddContact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newContact = { name, birthdate, phone, favorite };
+    const userId = localStorage.getItem('userId');
+    const newContact = { name, birthdate, phone, favorite, user_id: userId };
 
     try {
       const response = await fetch('http://localhost:3001/contacts', {
@@ -23,11 +23,10 @@ const AddContact = () => {
         body: JSON.stringify(newContact),
       });
 
+      const data = await response.json();
       if (response.ok) {
-        console.log('Contato adicionado com sucesso');
         navigate('/dashboard');
       } else {
-        const data = await response.json();
         console.error('Erro ao adicionar contato:', data.error);
       }
     } catch (err) {
@@ -55,8 +54,8 @@ const AddContact = () => {
           <input type="checkbox" checked={favorite} onChange={(e) => setFavorite(e.target.checked)} />
         </label>
         <button type="submit">Salvar</button>
+        <Link to="/dashboard" className="back-to-dashboard">Voltar ao Dashboard</Link>
       </form>
-      <Link to="/dashboard">Voltar ao Dashboard</Link>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+// App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Dashboard from './Dashboard';
@@ -7,6 +8,8 @@ import Profile from './Profile';
 import Login from './Login';
 import Register from './Register';
 import RecoverPassword from './RecoverPassword';
+import './Reset.css';
+import './App.css';
 
 function App() {
   return (

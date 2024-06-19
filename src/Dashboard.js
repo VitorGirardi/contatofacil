@@ -1,4 +1,3 @@
-// Dashboard.js
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Dashboard.css';
@@ -30,6 +29,27 @@ const Dashboard = () => {
     navigate(`/edit-contact/${contact.id}`, { state: { contact } });
   };
 
+  const handleAddContact = (newContact) => {
+    setContacts((prevContacts) => [...prevContacts, newContact]);
+  };
+
+  const handleRemoveContact = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3001/contacts/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setContacts((prevContacts) => prevContacts.filter(contact => contact.id !== id));
+      } else {
+        const data = await response.json();
+        console.error('Erro ao remover contato:', data.error);
+      }
+    } catch (err) {
+      console.error('Erro ao remover contato:', err);
+    }
+  };
+
   return (
     <div className="dash-container">
       <header className="dash-header">
@@ -54,10 +74,11 @@ const Dashboard = () => {
               <li key={contact.id} className="dash-contact-item">
                 {contact.name} - {contact.phone} {contact.favorite && <span>★</span>}
                 <button onClick={() => handleEdit(contact)}>Editar</button>
+                <button onClick={() => handleRemoveContact(contact.id)} className="dash-remove-contact-button">Remover</button>
               </li>
             ))}
           </ul>
-          <button onClick={() => navigate('/add-contact')} className="dash-add-contact-button">+</button>
+          <button onClick={() => navigate('/add-contact', { state: { onAddContact: handleAddContact } })} className="dash-add-contact-button">+</button>
         </div>
       </div>
     </div>
