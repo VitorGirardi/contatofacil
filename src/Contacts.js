@@ -8,7 +8,7 @@ const Contacts = () => {
 
   useEffect(() => {
     const fetchContacts = async () => {
-      const userId = localStorage.getItem('userId'); // Certifique-se de que o ID do usuário está sendo armazenado no localStorage corretamente
+      const userId = localStorage.getItem('userId'); 
       if (!userId) {
         navigate('/login');
         return;

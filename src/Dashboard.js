@@ -4,6 +4,8 @@ import './Dashboard.css';
 
 const Dashboard = () => {
   const [contacts, setContacts] = useState([]);
+  const [showRemovePopup, setShowRemovePopup] = useState(false);
+  const [contactToRemove, setContactToRemove] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,24 +31,32 @@ const Dashboard = () => {
     navigate(`/edit-contact/${contact.id}`, { state: { contact } });
   };
 
-  const handleAddContact = (newContact) => {
-    setContacts((prevContacts) => [...prevContacts, newContact]);
+  const openRemovePopup = () => {
+    setShowRemovePopup(true);
   };
 
-  const handleRemoveContact = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:3001/contacts/${id}`, {
-        method: 'DELETE',
-      });
+  const closeRemovePopup = () => {
+    setShowRemovePopup(false);
+    setContactToRemove(null);
+  };
 
-      if (response.ok) {
-        setContacts((prevContacts) => prevContacts.filter(contact => contact.id !== id));
-      } else {
-        const data = await response.json();
-        console.error('Erro ao remover contato:', data.error);
+  const handleRemoveContact = async () => {
+    if (contactToRemove) {
+      try {
+        const response = await fetch(`http://localhost:3001/contacts/${contactToRemove.id}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          setContacts((prevContacts) => prevContacts.filter(contact => contact.id !== contactToRemove.id));
+          closeRemovePopup();
+        } else {
+          const data = await response.json();
+          console.error('Erro ao remover contato:', data.error);
+        }
+      } catch (err) {
+        console.error('Erro ao remover contato:', err);
       }
-    } catch (err) {
-      console.error('Erro ao remover contato:', err);
     }
   };
 
@@ -74,13 +84,30 @@ const Dashboard = () => {
               <li key={contact.id} className="dash-contact-item">
                 {contact.name} - {contact.phone} {contact.favorite && <span>★</span>}
                 <button onClick={() => handleEdit(contact)}>Editar</button>
-                <button onClick={() => handleRemoveContact(contact.id)} className="dash-remove-contact-button">Remover</button>
               </li>
             ))}
           </ul>
-          <button onClick={() => navigate('/add-contact', { state: { onAddContact: handleAddContact } })} className="dash-add-contact-button">+</button>
+          <button onClick={() => navigate('/add-contact')} className="dash-add-contact-button">+</button>
+          <button onClick={openRemovePopup} className="dash-remove-contact-button">Remover Contato</button>
         </div>
       </div>
+
+      {showRemovePopup && (
+        <div className="remove-popup">
+          <div className="remove-popup-content">
+            <h3>Selecione o contato para remover:</h3>
+            <ul className="popup-contact-list">
+              {contacts.map(contact => (
+                <li key={contact.id} onClick={() => setContactToRemove(contact)} className={contactToRemove?.id === contact.id ? 'selected' : ''}>
+                  {contact.name} - {contact.phone} {contact.favorite && <span>★</span>}
+                </li>
+              ))}
+            </ul>
+            <button onClick={handleRemoveContact} className="confirm-remove-button">Confirmar Remoção</button>
+            <button onClick={closeRemovePopup} className="cancel-remove-button">Cancelar</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

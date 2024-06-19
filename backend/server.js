@@ -132,6 +132,22 @@ app.get('/users/:id', async (req, res) => {
   }
 });
 
+// Endpoint para remover um contato
+app.delete('/contacts/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('DELETE FROM contacts WHERE id = $1 RETURNING *', [id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Contato não encontrado' });
+    }
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    console.error('Erro ao remover contato:', err);
+    res.status(500).json({ error: 'Erro ao remover contato' });
+  }
+});
+
+
 // Iniciar o servidor
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);

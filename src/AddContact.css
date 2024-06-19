@@ -1,38 +1,48 @@
-/* AddContact.css */
-.add-contact-container {
+
+.ac-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #e8f5e9;
 }
 
-.add-contact-container form {
+.ac-form {
   background-color: white;
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.add-contact-container form label {
-  display: block;
+.ac-form label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
   margin-bottom: 10px;
   font-weight: bold;
 }
 
-.add-contact-container form input[type="text"],
-.add-contact-container form input[type="date"],
-.add-contact-container form input[type="checkbox"] {
-  width: calc(100% - 20px);
+.ac-form input[type="text"],
+.ac-form input[type="date"],
+.ac-form input[type="checkbox"] {
   padding: 10px;
   margin-bottom: 10px;
   border: 2px solid #004d40;
   border-radius: 5px;
+  text-align: center;
 }
 
-.add-contact-container form button {
+.ac-form input[type="checkbox"] {
+  width: auto;
+  cursor: pointer;
+}
+
+.ac-form button {
   background-color: #4caf50;
   color: white;
   border: none;
@@ -42,19 +52,19 @@
   width: 100%;
 }
 
-.add-contact-container form button:hover {
+.ac-form button:hover {
   background-color: #388e3c;
 }
 
-.add-contact-container .back-to-dashboard {
+.ac-back-to-dashboard {
   display: block;
-  margin-top: 20px;
+  margin-top: 10px;
   text-align: center;
   text-decoration: none;
   color: #00796b;
   font-weight: bold;
 }
 
-.add-contact-container .back-to-dashboard:hover {
+.ac-back-to-dashboard:hover {
   color: #004d40;
 }

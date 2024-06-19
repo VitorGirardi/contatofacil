@@ -16,7 +16,7 @@ const Login = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem('userId', data.id);  // Armazenar o ID do usuário no localStorage
+        localStorage.setItem('userId', data.id); 
         alert('Login realizado com sucesso!');
         navigate('/dashboard');
       } else {
